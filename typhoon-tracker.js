@@ -435,8 +435,8 @@
         // HTML structure to inject
         html: `
             <div class="header">
-                <h1>🌀 Philippines Typhoon Tracker</h1>
-                <p>Real-time tracking of active storms</p>
+                <h1>SafePH</h1>
+                <p>Emergency Hotline List</p>
                 <button class="emergency-btn" onclick="window.TyphoonTrackerPlugin.toggleEmergency()">
                     Emergency Hotlines
                 </button>
