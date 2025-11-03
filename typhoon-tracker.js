@@ -1396,30 +1396,54 @@
         },
 
         // Search hotlines by location name
-        searchHotlines: function(query) {
-            const locations = document.querySelectorAll('.hotline-location');
-            const noResults = document.querySelector('.no-results');
-            const searchTerm = query.toLowerCase().trim();
-            let visibleCount = 0;
+searchHotlines: function(query) {
+    const locations = document.querySelectorAll('.hotline-location');
+    const noResults = document.querySelector('.no-results');
+    const searchTerm = query.toLowerCase().trim();
+    let visibleCount = 0;
 
-            locations.forEach(function(location) {
-                const locationName = location.querySelector('h4').textContent.toLowerCase();
-                
-                if (locationName.includes(searchTerm)) {
-                    location.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    location.style.display = 'none';
-                }
-            });
-
-            // Show/hide no results message
-            if (visibleCount === 0 && searchTerm !== '') {
-                noResults.style.display = 'block';
-            } else {
-                noResults.style.display = 'none';
+    locations.forEach(function(location) {
+        const locationName = location.querySelector('h4').textContent.toLowerCase();
+        let hasMatch = locationName.includes(searchTerm);
+        
+        // Also search in barangay names
+        const barangayNames = location.querySelectorAll('.barangay-name');
+        let matchedBarangay = false;
+        
+        barangayNames.forEach(function(barangay) {
+            const barangayText = barangay.textContent.toLowerCase();
+            if (barangayText.includes(searchTerm)) {
+                hasMatch = true;
+                matchedBarangay = true;
             }
-        },
+        });
+        
+        if (hasMatch) {
+            location.style.display = 'block';
+            visibleCount++;
+            
+            // If a barangay matched, expand the barangay section
+            if (matchedBarangay) {
+                const barangaySection = location.querySelector('.barangay-contacts');
+                const seeMoreBtn = location.querySelector('.see-more-btn');
+                if (barangaySection && seeMoreBtn) {
+                    barangaySection.style.display = 'block';
+                    seeMoreBtn.textContent = 'Hide Barangay Contacts';
+                    seeMoreBtn.classList.add('expanded');
+                }
+            }
+        } else {
+            location.style.display = 'none';
+        }
+    });
+
+    // Show/hide no results message
+    if (visibleCount === 0 && searchTerm !== '') {
+        noResults.style.display = 'block';
+    } else {
+        noResults.style.display = 'none';
+    }
+},
 
         // Toggle barangay contacts visibility
         toggleBarangays: function(button) {
